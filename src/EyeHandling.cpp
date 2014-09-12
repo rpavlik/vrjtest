@@ -118,7 +118,7 @@ static inline void drawEyeLetter(Nested2d const &n, vrj::Projection::Eye eye) {
     }
 }
 
-static const float fontProportion = 0.2;
+static const float fontProportion = 0.2f;
 
 void drawPerEye(vrj::App *app) {
     vrj::opengl::UserData *data = dynamic_cast<vrj::opengl::DrawManager *>(
@@ -139,7 +139,7 @@ void drawPerEye(vrj::App *app) {
         Nested2d normNest = Nested2d::normalized(nest);
         float width = nest.width();   // length(lr - ll);
         float height = nest.height(); // length(ul - ll);
-        float minDim = std::min(width, height);
+        float minDim = (std::min)(width, height);
 
         Vec3f wallcenter = (ll + lr + ur + ul) * (1.0f / 4.0f);
 
@@ -155,9 +155,9 @@ void drawPerEye(vrj::App *app) {
 
         glBegin(GL_TRIANGLES);
         glColor3f(1.0f, 1.0f, 1.0f);
-        glVertex(wallcenter - Vec3f(-.01, -.01, 0));
+        glVertex(wallcenter - Vec3f(-.01f, -.01f, 0.f));
         glVertex(wallcenter);
-        glVertex(wallcenter - Vec3f(.01, .01, 0));
+        glVertex(wallcenter - Vec3f(.01f, .01f, 0.f));
         glEnd();
 
         glPushMatrix();
