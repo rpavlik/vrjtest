@@ -134,7 +134,7 @@ void drawPerEye(vrj::App *app) {
         gmtl::Point3f ll, lr, ur, ul;
         surf->getCorners(ll, lr, ur, ul);
 
-        cout << ll << endl << lr << endl << ur << endl << ul << endl;
+        //cout << ll << endl << lr << endl << ur << endl << ul << endl;
         Nested2d nest(lr - ll, ul - ll);
         Nested2d normNest = Nested2d::normalized(nest);
         float width = nest.width();   // length(lr - ll);
@@ -142,7 +142,7 @@ void drawPerEye(vrj::App *app) {
         float minDim = (std::min)(width, height);
 
         Vec3f wallcenter = (ll + lr + ur + ul) * (1.0f / 4.0f);
-
+#if 0
         switch (eye) {
             case vrj::Projection::LEFT:
                 cout << "Left" << endl;
@@ -152,6 +152,7 @@ void drawPerEye(vrj::App *app) {
                 break;
         }
         cout << "Wall center: " << wallcenter << endl;
+#endif
 
         glBegin(GL_TRIANGLES);
         glColor3f(1.0f, 1.0f, 1.0f);
