@@ -1,14 +1,14 @@
 /** @file
-	@brief Header for application object
+        @brief Header for application object
 
-	@date 2014
+        @date 2014
 
-	@author
-	Ryan Pavlik
-	<rpavlik@iastate.edu> and <abiryan@ryand.net>
-	http://academic.cleardefinition.com/
-	Iowa State University Virtual Reality Applications Center
-	Human-Computer Interaction Graduate Program
+        @author
+        Ryan Pavlik
+        <rpavlik@iastate.edu> and <abiryan@ryand.net>
+        http://academic.cleardefinition.com/
+        Iowa State University Virtual Reality Applications Center
+        Human-Computer Interaction Graduate Program
 */
 
 //          Copyright Iowa State University 2014.
@@ -23,9 +23,18 @@
 // - none
 
 // Library/third-party includes
-// - none
+
+#include <vrj/Draw/OpenGL/App.h>
 
 // Standard includes
 // - none
+
+class TestApp : public vrj::opengl::App {
+  public:
+    TestApp() {}
+    virtual ~TestApp() {}
+
+    virtual void draw();
+};
 
 #endif // INCLUDED_TestApp_h_GUID_0b548fa0_f573_4798_ad85_c04094a04c3a
