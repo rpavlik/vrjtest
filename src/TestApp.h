@@ -33,8 +33,15 @@ class TestApp : public vrj::opengl::App {
   public:
     TestApp() {}
     virtual ~TestApp() {}
-
+    /// Before starting, grab the wall info.
+    virtual void init();
+    /// Clear the buffer.
+    virtual void bufferPreDraw();
+    /// Main draw
     virtual void draw();
+
+    /// Enforce meters.
+    virtual float getDrawScaleFactor() { return 1.0f; }
 };
 
 #endif // INCLUDED_TestApp_h_GUID_0b548fa0_f573_4798_ad85_c04094a04c3a
