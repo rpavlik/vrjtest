@@ -23,7 +23,7 @@
 // - none
 
 // Library/third-party includes
-
+#include <gadget/Type/Position/PositionUnitConversion.h>
 #include <vrj/Draw/OpenGL/App.h>
 
 // Standard includes
@@ -41,7 +41,9 @@ class TestApp : public vrj::opengl::App {
     virtual void draw();
 
     /// Enforce meters.
-    virtual float getDrawScaleFactor() { return 1.0f; }
+    virtual float getDrawScaleFactor() {
+        return gadget::PositionUnitConversion::ConvertToMeters;
+    }
 };
 
 #endif // INCLUDED_TestApp_h_GUID_0b548fa0_f573_4798_ad85_c04094a04c3a

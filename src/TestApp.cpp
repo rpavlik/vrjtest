@@ -46,6 +46,11 @@ using std::endl;
 
 using namespace gmtl;
 
+static inline void glTranslate(Vec3f const &v) {
+    glTranslatef(v[0], v[1], v[2]);
+}
+static inline void glVertex(Vec3f const &v) { glVertex3fv(v.getData()); }
+
 /// x goes to the right, y goes up
 
 class Nested2d {
@@ -71,7 +76,6 @@ class Nested2d {
 
     void glVertex(float x, float y) const {
         Vec3f v = (*this)(x, y);
-        cout << "Vertex " << v << endl;
         glVertex3fv(v.getData());
     }
 
@@ -80,13 +84,9 @@ class Nested2d {
     Vec3f y_;
 };
 
-static inline void glTranslate(Vec3f const &v) {
-    glTranslatef(v[0], v[1], v[2]);
-}
-
 static inline void drawL(Nested2d const &n) {
     glColor3f(1.0f, 0.0f, 0.0f); // red
-    glBegin(GL_LINES);
+    glBegin(GL_LINE_STRIP);
     n.glVertex(0, 1);
     n.glVertex(0, 0);
     n.glVertex(0, 1);
@@ -95,7 +95,7 @@ static inline void drawL(Nested2d const &n) {
 
 static inline void drawR(Nested2d const &n) {
     glColor3f(0.0f, 1.0f, 0.0f); // green
-    glBegin(GL_LINES);
+    glBegin(GL_LINE_STRIP);
     n.glVertex(0, 0);
     n.glVertex(0, 1);
     n.glVertex(1, 1);
@@ -129,11 +129,14 @@ void TestApp::init() {
 }
 
 void TestApp::bufferPreDraw() {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    //glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
 }
 
 void TestApp::draw() {
+    glMatrixMode(GL_MODELVIEW);
 
     vrj::opengl::UserData *data = dynamic_cast<vrj::opengl::DrawManager *>(
                                       getDrawManager())->currentUserData();
@@ -141,7 +144,8 @@ void TestApp::draw() {
     vrj::ViewportPtr viewport = data->getViewport();
     vrj::ProjectionPtr projection = data->getProjection();
     vrj::Projection::Eye eye = projection->getEye();
-    switch (projection->getEye()) {
+
+    switch (eye) {
         case vrj::Projection::LEFT:
             cout << "Left" << endl;
             break;
@@ -149,10 +153,18 @@ void TestApp::draw() {
             cout << "Right" << endl;
             break;
     }
+
+    Vec3f wallcenter(0, 1.8, 0);
+    glBegin(GL_TRIANGLES);
+    glColor3f(0, 0, 1);
+    glVertex(wallcenter - Vec3f(-.01, -.01, 0));
+    glVertex(wallcenter);
+    glVertex(wallcenter - Vec3f(.01, .01, 0));
+    glEnd();
+
     boost::shared_ptr<vrj::SurfaceViewport> surf(
         boost::dynamic_pointer_cast<vrj::SurfaceViewport>(viewport));
     if (surf) {
-        glClear(GL_DEPTH_BUFFER_BIT);
         gmtl::Point3f ll, lr, ur, ul;
         surf->getCorners(ll, lr, ur, ul);
 
@@ -163,6 +175,15 @@ void TestApp::draw() {
         float height = nest.height(); // length(ul - ll);
         float minDim = std::min(width, height);
 
+        Vec3f wallcenter = (ll + lr + ur + ul) * (1.0f / 4.0f);
+        cout << "Wall center: " << wallcenter << endl;
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 1, 1);
+        glVertex(wallcenter - Vec3f(-.01, -.01, 0));
+        glVertex(wallcenter);
+        glVertex(wallcenter - Vec3f(.01, .01, 0));
+        glEnd();
+#if 0
         glPushMatrix();
         {
             const float fontSize = fontProportion * minDim;
@@ -176,8 +197,14 @@ void TestApp::draw() {
             }
             /// Scale letters from [0,1]
             glScalef(fontSize, fontSize, fontSize);
-            drawEyeLetter(normNest, eye);
+
+            glBegin(GL_POINTS);
+            glColor3f(1, 1, 1);
+            glVertex3f(0, 0, 0);
+            glEnd();
+            //                        drawEyeLetter(normNest, eye);
         }
         glPopMatrix();
+#endif
     }
 }
